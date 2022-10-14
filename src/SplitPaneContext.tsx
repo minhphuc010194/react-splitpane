@@ -1,8 +1,8 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
 const SplitPaneContext = createContext({
    onMouseHoldDown: (e: any) => {},
-   clientHeight: "",
+   clientHeight: '',
    setClientHeight: (value: number) => {},
    clientWidth: 0,
    setClientWidth: (value: number) => {},
