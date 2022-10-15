@@ -11,16 +11,18 @@ import React, {
 import QuoteContext from './QuoteContext';
 import SplitPaneContext from './SplitPaneContext';
 
-const SplitPane: FC<{ children: any; className: string }> = ({
-   children,
-   ...props
-}) => {
-   const [clientHeight, setClientHeight] = useState<any>(null);
-   const [clientWidth, setClientWidth] = useState<any>(null);
-   const yDividerPos = useRef<any>(null);
-   const xDividerPos = useRef<any>(null);
+const SplitPane: FC<{
+   children: React.ReactNode;
+   style: React.CSSProperties;
+}> = ({ children, ...props }) => {
+   const [clientHeight, setClientHeight] = useState<number>(0);
+   const [clientWidth, setClientWidth] = useState<number>(0);
+   const yDividerPos = useRef<number | null>(null);
+   const xDividerPos = useRef<number | null>(null);
 
-   const onMouseHoldDown = (e: { clientY: null; clientX: null }) => {
+   const onMouseHoldDown = (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent>
+   ) => {
       yDividerPos.current = e.clientY;
       xDividerPos.current = e.clientX;
    };
@@ -30,14 +32,10 @@ const SplitPane: FC<{ children: any; className: string }> = ({
       xDividerPos.current = null;
    };
 
-   const onMouseHoldMove = (e: {
-      clientY: string | number | null;
-      clientX: string | number | null;
-   }) => {
-      if (!yDividerPos.current && !xDividerPos.current) {
+   const onMouseHoldMove = (e: MouseEvent) => {
+      if (!yDividerPos.current || !xDividerPos.current) {
          return;
       }
-
       setClientHeight(clientHeight + e.clientY - yDividerPos.current);
       setClientWidth(clientWidth + e.clientX - xDividerPos.current);
 
@@ -102,7 +100,7 @@ export const SplitPaneTop = (
    }, [clientHeight]);
 
    return (
-      <div {...props} className="split-pane-top" ref={topRef}>
+      <div {...props} ref={topRef}>
          <h1>Famous quotes:</h1>
          <ul>
             {quotes.map((el, i) => {
@@ -127,7 +125,7 @@ export const SplitPaneBottom = (
    const { currQuote } = useContext(QuoteContext);
 
    return (
-      <div {...props} className="split-pane-bottom">
+      <div {...props}>
          Current <b>quote id</b>: {currQuote}
       </div>
    );
@@ -138,19 +136,20 @@ export const SplitPaneLeft = (
       ClassAttributes<HTMLDivElement> &
       HTMLAttributes<HTMLDivElement>
 ) => {
-   const topRef = createRef<any>();
+   const topRef = createRef<HTMLDivElement>();
    const { clientWidth, setClientWidth } = useContext(SplitPaneContext);
 
    useEffect(() => {
       if (!clientWidth && topRef.current) {
          const cw = topRef.current.clientWidth;
          setClientWidth(cw / 2);
+      }
+      if (topRef.current) {
          topRef.current.style.minWidth = clientWidth + 'px';
          topRef.current.style.maxWidth = clientWidth + 'px';
       }
    }, [clientWidth]);
-
-   return <div {...props} className="split-pane-left" ref={topRef} />;
+   return <div {...props} ref={topRef} />;
 };
 
 export const SplitPaneRight = (
@@ -162,7 +161,7 @@ export const SplitPaneRight = (
    const quote = quotes.find((el) => el.id === currQuote);
 
    return (
-      <div {...props} className="split-pane-right">
+      <div {...props}>
          <div className="quote">
             <blockquote>{quote?.description}</blockquote>—{' '}
             <span>{quote?.author}</span>
