@@ -8,7 +8,7 @@ import SplitPane, {
 } from './SplitPane';
 import QuoteContext, { QuoteType } from './QuoteContext';
 
-import './App.css';
+// import './App.css';
 
 const quotes: QuoteType[] = [
    {
@@ -34,19 +34,79 @@ export default function App() {
    const [currQuote, setCurrQuote] = useState(1);
 
    return (
-      <div className="App">
+      <div>
          <QuoteContext.Provider value={{ quotes, currQuote, setCurrQuote }}>
-            <SplitPane className="split-pane-row">
-               <SplitPaneLeft>
-                  <SplitPane className="split-pane-col">
-                     <SplitPaneTop />
-                     <Divider className="separator-row" />
-                     <SplitPaneBottom />
+            <SplitPane
+               style={{
+                  width: '100vw',
+                  height: '100vh',
+                  display: 'flex',
+                  flexDirection: 'row',
+               }}
+            >
+               <SplitPaneLeft
+                  style={{
+                     flex: 1,
+                     overflow: 'hidden',
+                  }}
+               >
+                  <SplitPane
+                     style={{
+                        width: '100vw',
+                        height: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                     }}
+                  >
+                     <SplitPaneTop
+                        style={{
+                           flex: 1,
+                           overflow: 'hidden',
+                           backgroundColor: '#ccc',
+                           textAlign: 'left',
+                           padding: '2%',
+                        }}
+                     />
+                     <Divider
+                        style={{
+                           border: '5px solid black',
+                           cursor: 'row-resize',
+                        }}
+                     />
+                     <SplitPaneBottom
+                        style={{
+                           flex: 1,
+                           overflow: 'hidden',
+                           backgroundColor: '#ccc',
+                           textAlign: 'left',
+                           padding: '2%',
+                        }}
+                     />
                   </SplitPane>
                </SplitPaneLeft>
-               <Divider className="separator-col" />
+               <Divider
+                  style={{
+                     border: '5px solid black',
+                     cursor: 'col-resize',
+                  }}
+               />
 
-               <SplitPaneRight />
+               <SplitPaneRight
+                  style={{
+                     flex: 1,
+                     overflow: 'hidden',
+                     backgroundColor: '#fff',
+                     backgroundImage: `linear-gradient(
+                           90deg,
+                           transparent 79px,
+                           #abced4 79px,
+                           #abced4 81px,
+                           transparent 81px
+                        ),
+                        linear-gradient(#eee 0.1em, transparent 0.1em)`,
+                     backgroundSize: '100% 1.2em',
+                  }}
+               />
             </SplitPane>
          </QuoteContext.Provider>
       </div>
